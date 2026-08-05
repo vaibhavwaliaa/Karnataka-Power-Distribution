@@ -27,6 +27,14 @@ app.use(express.json({ limit: "1mb" }));
 /*  Health check                                                       */
 /* ------------------------------------------------------------------ */
 
+app.get("/", (_req, res) => {
+  res.json({ status: "ok", service: "KSPDB Fault Localization Backend API" });
+});
+
+app.get("/health", (_req, res) => {
+  res.json({ status: "ok", timestamp: new Date().toISOString() });
+});
+
 app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
