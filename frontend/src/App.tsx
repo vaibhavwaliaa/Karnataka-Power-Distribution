@@ -763,9 +763,18 @@ function MapView({
         .addTo(poleLayer.current!);
     }
 
-    if (mapRef.current) {
-      const bounds = L.latLngBounds(poles.map((p) => [p.lat, p.lon] as [number, number]));
-      mapRef.current.fitBounds(bounds, { padding: [40, 40] });
+    if (mapRef.current && poles.length > 0) {
+      try {
+        const valid = poles.filter((p) => typeof p.lat === "number" && typeof p.lon === "number" && !isNaN(p.lat) && !isNaN(p.lon));
+        if (valid.length > 0) {
+          const bounds = L.latLngBounds(valid.map((p) => [p.lat, p.lon] as [number, number]));
+          if (bounds.isValid()) {
+            mapRef.current.fitBounds(bounds, { padding: [40, 40] });
+          }
+        }
+      } catch (e) {
+        console.error("Bounds error:", e);
+      }
     }
   }, [poles]);
 
@@ -775,6 +784,7 @@ function MapView({
     ticketLayer.current.clearLayers();
 
     for (const ticket of tickets) {
+      if (typeof ticket.lat !== "number" || typeof ticket.lon !== "number" || isNaN(ticket.lat) || isNaN(ticket.lon)) continue;
       const isSel = selectedTicket?.id === ticket.id;
 
       L.circleMarker([ticket.lat, ticket.lon], {
@@ -793,10 +803,14 @@ function MapView({
         .addTo(ticketLayer.current!);
     }
 
-    if (selectedTicket && mapRef.current) {
-      mapRef.current.setView([selectedTicket.lat, selectedTicket.lon], 16, {
-        animate: true,
-      });
+    if (selectedTicket && mapRef.current && typeof selectedTicket.lat === "number" && typeof selectedTicket.lon === "number") {
+      try {
+        mapRef.current.setView([selectedTicket.lat, selectedTicket.lon], 16, {
+          animate: true,
+        });
+      } catch (e) {
+        console.error("SetView error:", e);
+      }
     }
   }, [tickets, selectedTicket, onSelect]);
 
