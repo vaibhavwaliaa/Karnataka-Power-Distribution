@@ -88,22 +88,11 @@ export function App() {
 
   /* load */
   const load = useCallback(async () => {
-    try {
-      const [td, pd, sd, ni] = await Promise.all([
-        api.getTickets().catch((err) => { console.error("Tickets error:", err); return []; }),
-        api.getPoles().catch((err) => { console.error("Poles error:", err); return []; }),
-        api.getStats().catch((err) => { console.error("Stats error:", err); return null; }),
-        api.getNetworkInfo().catch((err) => { console.error("NetworkInfo error:", err); return null; }),
-      ]);
-      setTickets(td || []);
-      setPoles(pd || []);
-      setStats(sd);
-      setNetworkInfo(ni);
-    } catch (e) {
-      console.error("Load error:", e);
-    } finally {
-      setLoading(false);
-    }
+    setLoading(false);
+    api.getTickets().then((td) => setTickets(td || [])).catch((err) => console.error("Tickets error:", err));
+    api.getStats().then((sd) => setStats(sd)).catch((err) => console.error("Stats error:", err));
+    api.getNetworkInfo().then((ni) => setNetworkInfo(ni)).catch((err) => console.error("NetworkInfo error:", err));
+    api.getPoles().then((pd) => setPoles(pd || [])).catch((err) => console.error("Poles error:", err));
   }, []);
 
   useEffect(() => { load(); }, [load]);
