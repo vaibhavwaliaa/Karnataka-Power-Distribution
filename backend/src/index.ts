@@ -20,7 +20,15 @@ export const io = new SocketIOServer(server, {
 /*  Middleware                                                         */
 /* ------------------------------------------------------------------ */
 
-app.use(cors());
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+    methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+  })
+);
+app.options("*", cors());
 app.use(express.json({ limit: "1mb" }));
 
 /* ------------------------------------------------------------------ */

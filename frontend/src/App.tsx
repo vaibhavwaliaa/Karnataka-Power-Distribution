@@ -90,17 +90,17 @@ export function App() {
   const load = useCallback(async () => {
     try {
       const [td, pd, sd, ni] = await Promise.all([
-        api.getTickets(),
-        api.getPoles(),
-        api.getStats(),
-        api.getNetworkInfo(),
+        api.getTickets().catch((err) => { console.error("Tickets error:", err); return []; }),
+        api.getPoles().catch((err) => { console.error("Poles error:", err); return []; }),
+        api.getStats().catch((err) => { console.error("Stats error:", err); return null; }),
+        api.getNetworkInfo().catch((err) => { console.error("NetworkInfo error:", err); return null; }),
       ]);
-      setTickets(td);
-      setPoles(pd);
+      setTickets(td || []);
+      setPoles(pd || []);
       setStats(sd);
       setNetworkInfo(ni);
     } catch (e) {
-      console.error(e);
+      console.error("Load error:", e);
     } finally {
       setLoading(false);
     }
