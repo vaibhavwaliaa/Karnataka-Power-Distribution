@@ -1,0 +1,50 @@
+
+services:
+  db:
+    image: public.ecr.aws/docker/library/postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-faultdb}
+      POSTGRES_USER: ${POSTGRES_USER:-faultuser}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-faultpass}
+    ports:
+      - "${DB_PORT:-5433}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-faultuser} -d ${POSTGRES_DB:-faultdb}"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-faultuser}:${POSTGRES_PASSWORD:-faultpass}@db:5432/${POSTGRES_DB:-faultdb}
+      PORT: 3001
+      NODE_ENV: ${NODE_ENV:-production}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    ports:
+      - "${BACKEND_PORT:-3001}:3001"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:3001}
+        VITE_WS_URL: ${VITE_WS_URL:-http://localhost:3001}
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "${FRONTEND_PORT:-5173}:80"
+
+volumes:
+  pgdata:
