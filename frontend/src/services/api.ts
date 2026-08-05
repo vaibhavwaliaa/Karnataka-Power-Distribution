@@ -1,5 +1,5 @@
 const API_BASE =
-  (import.meta as any).env?.VITE_API_URL || window.location.origin;
+  (import.meta as any).env?.VITE_API_URL || "https://kspdb-backend-hs6a.onrender.com";
 
 async function fetchJSON<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, {
