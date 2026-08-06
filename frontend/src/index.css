@@ -522,66 +522,68 @@ body {
   scrollbar-color: var(--border-1) transparent;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 12px;
 }
 
-.detail-body::-webkit-scrollbar { width: 3px; }
+.detail-body::-webkit-scrollbar { width: 4px; }
 .detail-body::-webkit-scrollbar-track { background: transparent; }
-.detail-body::-webkit-scrollbar-thumb { background: var(--border-1); }
+.detail-body::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 2px; }
 
 .section {
-  border: 1px solid var(--border-0);
+  border: 1px solid var(--border-1);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  margin-bottom: 6px;
+  background: var(--bg-2);
+  margin-bottom: 0;
 }
 
 .section-title {
-  padding: 8px 12px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  padding: 9px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-4);
-  background: var(--bg-2);
-  border-bottom: 1px solid var(--border-0);
+  color: var(--text-2);
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid var(--border-1);
 }
 
 .section-body {
-  background: var(--bg-1);
-  padding: 12px;
+  background: var(--bg-2);
+  padding: 14px;
 }
 
 /* Data grid */
 .kv-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px 16px;
+  gap: 12px 16px;
 }
 
 .kv-grid.full { grid-template-columns: 1fr; }
 
-.kv { display: flex; flex-direction: column; gap: 2px; }
+.kv { display: flex; flex-direction: column; gap: 4px; }
 
 .kv-key {
   font-size: 10px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-4);
+  color: var(--text-3);
 }
 
 .kv-val {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--text-0);
   font-family: var(--font-mono);
   letter-spacing: 0.01em;
+  word-break: break-word;
 }
 
 .kv-val.big {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 700;
   letter-spacing: -0.02em;
 }
 
@@ -609,11 +611,11 @@ body {
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-4);
+  color: var(--text-3);
 }
 
 .conf-track {
-  height: 3px;
+  height: 4px;
   width: 100%;
   background: var(--border-1);
   border-radius: 2px;
@@ -633,30 +635,31 @@ body {
 
 .conf-reason {
   font-size: 12px;
-  color: var(--text-2);
-  line-height: 1.7;
-  padding-top: 8px;
-  border-top: 1px solid var(--border-0);
+  color: var(--text-1);
+  line-height: 1.6;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-1);
+  margin-top: 4px;
 }
 
 /* ── Timeline ───────────────────────────────────────────────── */
-.timeline { display: flex; flex-direction: column; gap: 0; }
+.timeline { display: flex; flex-direction: column; gap: 4px; }
 
 .tl-item {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  padding: 7px 0;
+  gap: 12px;
+  padding: 8px 0;
   position: relative;
 }
 
 .tl-item + .tl-item {
-  border-top: 1px solid var(--border-0);
+  border-top: 1px solid var(--border-1);
 }
 
 .tl-dot {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   flex-shrink: 0;
   margin-top: 4px;
@@ -672,16 +675,16 @@ body {
 .tl-content { flex: 1; min-width: 0; }
 
 .tl-label {
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--text-1);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-0);
 }
 
 .tl-time {
   font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--text-3);
-  margin-top: 1px;
+  font-size: 11px;
+  color: var(--text-2);
+  margin-top: 2px;
 }
 
 /* ── Dispatch brief ─────────────────────────────────────────── */
