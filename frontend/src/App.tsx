@@ -566,7 +566,7 @@ export function App() {
                       <option value="">Select transformer…</option>
                       {networkInfo?.dts.map((d: any) => (
                         <option key={d.dtId} value={d.dtId}>
-                          {d.dtId} — {d.poleCount} poles
+                          {d.dtId} ({d.feederId}) — {d.poleCount} poles
                         </option>
                       ))}
                     </select>
