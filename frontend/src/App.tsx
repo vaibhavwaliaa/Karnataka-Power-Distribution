@@ -86,10 +86,36 @@ export function App() {
   const [simPole, setSimPole] = useState("");
   const [simOut, setSimOut] = useState("");
 
+  const normalizeTicket = (t: any): Ticket => {
+    if (!t) return t;
+    return {
+      ...t,
+      dtId: t.dtId || t.dt_id || "—",
+      feederId: t.feederId || t.feeder_id || "—",
+      spanStartPole: t.spanStartPole || t.span_start_pole || null,
+      spanEndPole: t.spanEndPole || t.span_end_pole || null,
+      pincode: t.pincode || t.pin_code || null,
+      affectedPoleCount: Number(t.affectedPoleCount ?? t.affected_pole_count ?? 0),
+      affectedHouseholds: t.affectedHouseholds ?? t.affected_households ?? 0,
+      confidence: Number(t.confidence ?? 0),
+      confidenceReason: t.confidenceReason || t.confidence_reason || "",
+      dispatchBrief: t.dispatchBrief || t.dispatch_brief || null,
+      status: t.status || "detected",
+      createdAt: t.createdAt || t.created_at || new Date().toISOString(),
+      acknowledgedAt: t.acknowledgedAt || t.acknowledged_at || null,
+      crewAssignedAt: t.crewAssignedAt || t.crew_assigned_at || null,
+      resolvedAt: t.resolvedAt || t.resolved_at || null,
+      verifiedAt: t.verifiedAt || t.verified_at || null,
+      closedAt: t.closedAt || t.closed_at || null,
+    };
+  };
+
   /* load */
   const load = useCallback(async () => {
     setLoading(false);
-    api.getTickets().then((td) => setTickets(td || [])).catch((err) => console.error("Tickets error:", err));
+    api.getTickets()
+      .then((td) => setTickets((td || []).map(normalizeTicket)))
+      .catch((err) => console.error("Tickets error:", err));
     api.getStats().then((sd) => setStats(sd)).catch((err) => console.error("Stats error:", err));
     api.getNetworkInfo().then((ni) => setNetworkInfo(ni)).catch((err) => console.error("NetworkInfo error:", err));
     api.getPoles().then((pd) => setPoles(pd || [])).catch((err) => console.error("Poles error:", err));
@@ -98,16 +124,18 @@ export function App() {
   useEffect(() => { load(); }, [load]);
 
   /* real-time */
-  useSocket("ticket:created", (t: Ticket) => {
-    setTickets((prev) => [t, ...prev]);
-    notify(`Fault detected — incident #${t.id}`, "fault");
+  useSocket("ticket:created", (t: any) => {
+    const norm = normalizeTicket(t);
+    setTickets((prev) => [norm, ...prev]);
+    notify(`Fault detected — incident #${norm.id}`, "fault");
     refreshStats();
   });
-  useSocket("ticket:updated", (t: Ticket) => {
-    setTickets((prev) => prev.map((x) => (x.id === t.id ? t : x)));
-    if (selected?.id === t.id) setSelected(t);
-    if (t.status === "verified")
-      notify(`Incident #${t.id} verified — grid restored`, "success");
+  useSocket("ticket:updated", (t: any) => {
+    const norm = normalizeTicket(t);
+    setTickets((prev) => prev.map((x) => (x.id === norm.id ? norm : x)));
+    if (selected?.id === norm.id) setSelected(norm);
+    if (norm.status === "verified")
+      notify(`Incident #${norm.id} verified — grid restored`, "success");
     refreshStats();
   });
   useSocket("poles:updated", () => { refreshPoles(); refreshStats(); });
@@ -306,21 +334,21 @@ export function App() {
                           <div className="kv-grid">
                             <div className="kv">
                               <span className="kv-key">Transformer</span>
-                              <span className="kv-val">{selected.dtId}</span>
+                              <span className="kv-val">{selected.dtId || (selected as any).dt_id || "—"}</span>
                             </div>
                             <div className="kv">
                               <span className="kv-key">Feeder</span>
-                              <span className="kv-val">{selected.feederId}</span>
+                              <span className="kv-val">{selected.feederId || (selected as any).feeder_id || "—"}</span>
                             </div>
                             <div className="kv">
                               <span className="kv-key">Coordinates</span>
                               <span className="kv-val">
-                                {selected.lat.toFixed(5)}, {selected.lon.toFixed(5)}
+                                {selected.lat ? selected.lat.toFixed(5) : "—"}, {selected.lon ? selected.lon.toFixed(5) : "—"}
                               </span>
                             </div>
                             <div className="kv">
                               <span className="kv-key">PIN Code</span>
-                              <span className="kv-val">{selected.pincode || "—"}</span>
+                              <span className="kv-val">{selected.pincode || (selected as any).pin_code || "—"}</span>
                             </div>
                             {selected.spanStartPole && (
                               <div className="kv">
@@ -345,12 +373,12 @@ export function App() {
                           <div className="kv-grid">
                             <div className="kv">
                               <span className="kv-key">Poles affected</span>
-                              <span className="kv-val big red">{selected.affectedPoleCount}</span>
+                              <span className="kv-val big red">{selected.affectedPoleCount ?? (selected as any).affected_pole_count ?? 0}</span>
                             </div>
                             <div className="kv">
                               <span className="kv-key">Households</span>
                               <span className="kv-val big amber">
-                                ~{selected.affectedHouseholds ?? "?"}
+                                ~{selected.affectedHouseholds ?? (selected as any).affected_households ?? "?"}
                               </span>
                             </div>
                           </div>
