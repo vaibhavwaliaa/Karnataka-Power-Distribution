@@ -719,6 +719,7 @@ function MapView({
   const mapRef = useRef<L.Map | null>(null);
   const poleLayer = useRef<L.LayerGroup | null>(null);
   const ticketLayer = useRef<L.LayerGroup | null>(null);
+  const hasFitBounds = useRef(false);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -738,8 +739,27 @@ function MapView({
     ticketLayer.current = L.layerGroup().addTo(map);
     mapRef.current = map;
 
-    return () => { map.remove(); mapRef.current = null; };
+    // Handle container resize automatically
+    const observer = new ResizeObserver(() => {
+      map.invalidateSize();
+    });
+    observer.observe(containerRef.current);
+
+    return () => {
+      observer.disconnect();
+      map.remove();
+      mapRef.current = null;
+    };
   }, []);
+
+  /* Invalidate map size whenever selected ticket changes */
+  useEffect(() => {
+    if (!mapRef.current) return;
+    const timer = setTimeout(() => {
+      mapRef.current?.invalidateSize();
+    }, 150);
+    return () => clearTimeout(timer);
+  }, [selectedTicket]);
 
   /* Pole markers */
   useEffect(() => {
@@ -769,13 +789,14 @@ function MapView({
         .addTo(poleLayer.current!);
     }
 
-    if (mapRef.current && poles.length > 0) {
+    if (mapRef.current && poles.length > 0 && !hasFitBounds.current) {
       try {
         const valid = poles.filter((p) => typeof p.lat === "number" && typeof p.lon === "number" && !isNaN(p.lat) && !isNaN(p.lon));
         if (valid.length > 0) {
           const bounds = L.latLngBounds(valid.map((p) => [p.lat, p.lon] as [number, number]));
           if (bounds.isValid()) {
             mapRef.current.fitBounds(bounds, { padding: [40, 40] });
+            hasFitBounds.current = true;
           }
         }
       } catch (e) {
