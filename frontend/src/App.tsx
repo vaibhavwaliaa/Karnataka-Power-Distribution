@@ -273,7 +273,7 @@ export function App() {
                           className="btn-back"
                           onClick={() => setSelected(null)}
                         >
-                          ← Incidents
+                          ← Incidents{tickets.length > 1 ? ` (${tickets.length})` : ""}
                         </button>
                       </div>
                       <div className="detail-title-row">
