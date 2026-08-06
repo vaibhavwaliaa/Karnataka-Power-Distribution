@@ -473,7 +473,9 @@ export function App() {
                         <div className="section-title">Dispatch brief</div>
                         <div className="section-body">
                           {selected.dispatchBrief ? (
-                            <div className="brief-text">{selected.dispatchBrief}</div>
+                            <div className="brief-text">
+                              {selected.dispatchBrief.replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{26A0}\u{1F534}\u{1F7E1}]/gu, '')}
+                            </div>
                           ) : (
                             <button
                               id="btn-gen-brief"

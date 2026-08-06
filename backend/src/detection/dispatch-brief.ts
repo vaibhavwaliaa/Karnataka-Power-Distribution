@@ -11,17 +11,17 @@ export function generateTemplateBrief(fault: DetectedFault): string {
   // ---- Header ----
   switch (fault.faultType) {
     case "feeder":
-      lines.push("⚠️ FEEDER-LEVEL FAULT — PRIORITY: CRITICAL");
+      lines.push("FEEDER-LEVEL FAULT — PRIORITY: CRITICAL");
       lines.push(`Feeder ${fault.feederId} is experiencing a complete outage.`);
       break;
     case "dt":
-      lines.push("🔴 TRANSFORMER FAULT — PRIORITY: HIGH");
+      lines.push("TRANSFORMER FAULT — PRIORITY: HIGH");
       lines.push(
         `Distribution Transformer ${fault.dtId} on Feeder ${fault.feederId} is fully de-energized.`
       );
       break;
     case "span":
-      lines.push("🟡 SPAN FAULT — PRIORITY: STANDARD");
+      lines.push("SPAN FAULT — PRIORITY: STANDARD");
       lines.push(
         `Line fault detected on Feeder ${fault.feederId}, DT ${fault.dtId}.`
       );
@@ -31,7 +31,7 @@ export function generateTemplateBrief(fault: DetectedFault): string {
   lines.push("");
 
   // ---- Location ----
-  lines.push("📍 LOCATION:");
+  lines.push("LOCATION:");
   lines.push(`  Coordinates: ${fault.lat.toFixed(6)}°N, ${fault.lon.toFixed(6)}°E`);
   if (fault.pincode) {
     lines.push(`  PIN Code: ${fault.pincode}`);
@@ -58,7 +58,7 @@ export function generateTemplateBrief(fault: DetectedFault): string {
   lines.push("");
 
   // ---- Impact ----
-  lines.push("📊 IMPACT:");
+  lines.push("IMPACT:");
   lines.push(`  Poles affected: ${fault.affectedPoleCount}`);
   lines.push(`  Estimated households without power: ~${fault.affectedHouseholds}`);
   lines.push(
@@ -68,7 +68,7 @@ export function generateTemplateBrief(fault: DetectedFault): string {
   lines.push("");
 
   // ---- Crew Instructions ----
-  lines.push("🔧 RECOMMENDED ACTIONS:");
+  lines.push("RECOMMENDED ACTIONS:");
   switch (fault.faultType) {
     case "feeder":
       lines.push("  1. Check 11 kV feeder breaker at the substation.");
@@ -93,7 +93,7 @@ export function generateTemplateBrief(fault: DetectedFault): string {
   lines.push("");
 
   // ---- Safety ----
-  lines.push("⚡ SAFETY NOTES:");
+  lines.push("SAFETY NOTES:");
   lines.push("  - Assume all conductors are energized until verified dead.");
   lines.push("  - Follow Lock-Out Tag-Out (LOTO) procedure before work.");
   lines.push("  - Use proper PPE (insulating gloves, safety helmet, earthing rod).");
@@ -104,7 +104,7 @@ export function generateTemplateBrief(fault: DetectedFault): string {
   lines.push("");
 
   // ---- Confidence explanation ----
-  lines.push("📝 DETECTION NOTES:");
+  lines.push("DETECTION NOTES:");
   lines.push(`  ${fault.confidenceReason}`);
 
   return lines.join("\n");
