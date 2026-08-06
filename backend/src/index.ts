@@ -11,8 +11,9 @@ const server = http.createServer(app);
 // Socket.io with CORS for the frontend
 export const io = new SocketIOServer(server, {
   cors: {
-    origin: "*",
+    origin: config.corsOrigin === "*" ? "*" : [config.corsOrigin, "http://localhost:5173"],
     methods: ["GET", "POST", "PATCH"],
+    credentials: true,
   },
 });
 
@@ -22,7 +23,7 @@ export const io = new SocketIOServer(server, {
 
 app.use(
   cors({
-    origin: true,
+    origin: config.corsOrigin === "*" ? true : [config.corsOrigin, "http://localhost:5173"],
     credentials: true,
     methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],

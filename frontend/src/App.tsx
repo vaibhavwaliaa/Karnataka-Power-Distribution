@@ -195,7 +195,13 @@ export function App() {
             <div className="status-strip">
               <div className="status-chip status-chip--live" title="Live poles">
                 <span className="dot" />
-                {stats.poles.live} live
+                {stats.poles.live} live poles
+              </div>
+              <div className="status-chip" style={{ background: "rgba(255,255,255,0.06)", color: "#e2e8f0", borderColor: "rgba(255,255,255,0.12)" }} title="Distribution Transformers">
+                ⚡ {stats.transformers || 80} DTs
+              </div>
+              <div className="status-chip" style={{ background: "rgba(255,255,255,0.06)", color: "#e2e8f0", borderColor: "rgba(255,255,255,0.12)" }} title="Grid Feeders">
+                🔌 31 Feeders
               </div>
               {stats.poles.dark > 0 && (
                 <div className="status-chip status-chip--dark" title="Dark poles">

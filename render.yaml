@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: fault-localization-backend
+    runtime: docker
+    rootDir: backend
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: CORS_ORIGIN
+        value: "*"
+      - key: GEMINI_API_KEY
+        sync: false

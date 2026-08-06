@@ -6,7 +6,11 @@ import path from "path";
 
 async function runMigrations() {
   console.log("Running database migrations...");
-  const pool = new Pool({ connectionString: config.databaseUrl });
+  const isNeon = config.databaseUrl.includes("neon.tech") || config.databaseUrl.includes("sslmode=");
+  const pool = new Pool({
+    connectionString: config.databaseUrl,
+    ssl: isNeon ? { rejectUnauthorized: false } : undefined,
+  });
   const db = drizzle(pool);
 
   await migrate(db, {

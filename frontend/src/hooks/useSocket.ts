@@ -2,7 +2,7 @@ import { useEffect, useRef, useCallback } from "react";
 import { io, Socket } from "socket.io-client";
 
 const WS_URL =
-  (import.meta as any).env?.VITE_WS_URL || "https://kspdb-backend-hs6a.onrender.com";
+  (import.meta as any).env?.VITE_WS_URL || "https://fault-localization-backend.onrender.com";
 
 let socket: Socket | null = null;
 
