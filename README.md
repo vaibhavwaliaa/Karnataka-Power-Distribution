@@ -1,6 +1,7 @@
 # KSPDB Fault Localization System
 
 Real-time power outage detection, span-level fault localization, and telemetry auto-verification system built for the **Karnataka State Power Distribution Board (KSPDB)**. Automatically processes telemetry events from ~4,000 utility poles to identify broken line spans, group dark pole alerts, filter false alarms, and verify power restoration.
+
 Demo Video LINK: https://drive.google.com/file/d/1y40VIkGthPTzM0pFkf-SSea2HfYcXw_9/view?usp=sharing
 
 ---
